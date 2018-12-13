@@ -1,5 +1,8 @@
+# Arch packages
 python3
 python3-pip
 whois
 drill
+libnetfilter_queue
 
+# Pip packages
