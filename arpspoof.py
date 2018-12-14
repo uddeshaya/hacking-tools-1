@@ -44,7 +44,7 @@ def restore_arp(router_mac, router_ip, target_mac, target_ip):
 def start_spoof(target, router):
     pkt_count = 0
     toggle_forwarding(1)
-    print("[+] Eanbled ipv4 forwarding on all interfaces")
+    print("[+] Enabled ipv4 forwarding on all interfaces")
     target_mac = get_mac(target)
     print("[+] Target at {} has MAC address {}".format(target, target_mac))
     router_mac = get_mac(router)
