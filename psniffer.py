@@ -123,13 +123,14 @@ if __name__ == "__main__":
     if(getuid() != 0):
         print("[-] This program must be run as root")
         exit(1)
-    elif(len(argv) != 3):
+    elif(len(argv) != 4):
         print("[-] Invalid number of arguments\n"
-              "[+] USAGE: {} <INTERFACE> <OUTPUT FILENAME>".format(__file__))
+              "[+] USAGE: {} <INTERFACE> <TARGET IP> <OUTPUT FILENAME>".format(__file__))
         exit(2)
     else:
-        OUTPUT_FILE = argv[2]
+        OUTPUT_FILE = argv[3]
+        target_filter = "host {}".format(argv[2])
         print("[+] Starting packet capture on {}, press ctrl-c to quit".format(argv[1]))
-        sniff(filter=None, iface=argv[1], count=0, prn=pktCallback, store=False)
+        sniff(filter=target_filter, iface=argv[1], count=0, prn=pktCallback, store=False)
 
 

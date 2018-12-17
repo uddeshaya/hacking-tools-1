@@ -17,7 +17,7 @@ def toggle_forwarding(value):
 
 def get_mac(target):
     arp_broadcast = Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(op=ARP.who_has, pdst=target)
-    answered = srp(arp_broadcast, timeout=1, verbose=False)[0]
+    answered = srp(arp_broadcast, timeout=2, verbose=False)[0]
     # Return the MAC address of the target machine that responded to our ARP broadcast
     return answered[0][1].hwsrc
 

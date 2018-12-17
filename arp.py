@@ -7,6 +7,20 @@ from os import getuid
 from sys import exit, argv
 from scapy.layers.l2 import Ether, ARP
 from scapy.sendrecv import srp
+import json
+
+def read_oui_json_file():
+    with open("oui.json", 'r') as fd:
+        return json.load(fd)
+
+def print_found_host(arp):
+    oui_dict = read_oui_json_file()
+    host_oui = arp.hwsrc[:8]
+    if host_oui in oui_dict:
+        print("{:15} {:18} {}".format(arp.psrc, arp.hwsrc, oui_dict[host_oui]))
+    else:
+        print("{:15} {:18} Unavailable".format(arp.psrc, arp.hwsrc))
+
 
 def broadcast_arp(target):
     sep = '-' * 33
@@ -17,7 +31,7 @@ def broadcast_arp(target):
     print("{}\n{:15} {:18}\n{}".format(sep, "Host IP", "MAC Address", sep))
     for _, recv in answered:
         arp = recv.getlayer(ARP)
-        print("{:15} {:18}".format(arp.psrc, arp.hwsrc))
+        print_found_host(arp)
     print("Scan is done: {} hosts found".format(len(answered)))
 
 
