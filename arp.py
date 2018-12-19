@@ -16,9 +16,9 @@ def read_oui_json_file():
 def print_found_host(arp):
     oui_dict = read_oui_json_file()
     host_oui = arp.hwsrc[:8]
-    if host_oui in oui_dict:
+    try:
         print("{:15} {:18} {}".format(arp.psrc, arp.hwsrc, oui_dict[host_oui]))
-    else:
+    except KeyError:
         print("{:15} {:18} Unavailable".format(arp.psrc, arp.hwsrc))
 
 
