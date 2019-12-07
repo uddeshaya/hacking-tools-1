@@ -14,6 +14,7 @@ channel = re.compile(br"Channel:(\d*)")
 wpa = re.compile(br"IE:\s(WPA)\sVersion\s1")
 wpa2 = re.compile(br"IE:\sIEEE\s802\.11i/(WPA2)\sVersion\s1")
 
+
 def print_results(iwlist):
     for cell in iwlist.split(b'Cell')[1:]:
         #
@@ -44,15 +45,17 @@ def print_results(iwlist):
 def loop_iwlist(interface):
     try:
         while True:
-            iwlist = subprocess.check_output(['sudo', 'iwlist', interface, 'scan'])
-            subprocess.call(['clear'])
-            print("{:17}\t\t{}\t\t{}\t\t{:13}\t\t{}".format("Address", "Quality",
-                "Channel", "Encryption", "ESSID"))
-            print("-"*80)
-            print_results(iwlist)
-            sleep(1)
+            iwlist = subprocess.check_output(['sudo', 'iw', interface, 'scan'])
+            print(iwlist)
+            # subprocess.call(['clear'])
+            # print("{:17}\t\t{}\t\t{}\t\t{:13}\t\t{}".format("Address", "Quality",
+            #     "Channel", "Encryption", "ESSID"))
+            # print("-"*80)
+            # print_results(iwlist)
+            sleep(3)
     except KeyboardInterrupt:
         return
+
 
 if __name__ == "__main__":
     interface = "wlp4s0"
